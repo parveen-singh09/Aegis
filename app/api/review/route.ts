@@ -1,14 +1,7 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
-// Aegis review endpoint: guidelines + content in -> cited, explainable flags out.
-// The guarantee: every flag must quote a rule that literally appears in the
-// submitted guidelines. Flags that cite nothing (or misquote) are dropped here,
-// server-side, so the model cannot invent a rule. This is the whole product.
-
-// POST handlers are never cached, so no route-cache config is needed.
-
 const MODEL = "gemini-2.5-flash";
-const MAX_CHARS = 20000; // guard: keep a single request small + cheap
+const MAX_CHARS = 200000;
 
 type Flag = {
   severity: "high" | "medium" | "low";
@@ -50,8 +43,6 @@ const flagSchema = {
   required: ["flags"],
 };
 
-// Normalize for a forgiving substring check: collapse whitespace, lowercase,
-// strip smart quotes the model sometimes "corrects" into.
 function norm(s: string): string {
   return s
     .replace(/[‘’“”]/g, "'")
@@ -142,7 +133,6 @@ ${content}
   const g = norm(guidelines);
   const all = Array.isArray(parsed.flags) ? parsed.flags : [];
 
-  // The guarantee: keep a flag only if its quote actually exists in the guidelines.
   const kept = all.filter((f) => f?.guideline_quote && g.includes(norm(f.guideline_quote)));
   const droppedUnsupported = all.length - kept.length;
 
@@ -151,7 +141,7 @@ ${content}
     meta: {
       model: MODEL,
       total_raised: all.length,
-      dropped_unsupported: droppedUnsupported, // flags the model raised but could not cite
+      dropped_unsupported: droppedUnsupported,
     },
   });
 }
