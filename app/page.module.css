@@ -220,6 +220,10 @@
 }
 
 .review {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
   background: var(--action);
   color: #fff;
   border: none;
@@ -230,6 +234,36 @@
   cursor: pointer;
   box-shadow: var(--shadow-sm);
   transition: background 120ms ease, transform 80ms ease;
+}
+
+.review.busy:disabled,
+.rerun.busy:disabled {
+  background: var(--action);
+  color: #fff;
+  opacity: 1;
+  cursor: progress;
+}
+
+.spinner {
+  width: 15px;
+  height: 15px;
+  flex: none;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  animation: aegisSpin 0.7s linear infinite;
+}
+
+@keyframes aegisSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 1.8s;
+  }
 }
 .review:hover:not(:disabled) {
   background: var(--action-hover);
@@ -348,6 +382,10 @@
 
 .rerun {
   flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   background: var(--action);
   color: #fff;
   border: none;

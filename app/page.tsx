@@ -384,7 +384,13 @@ export default function Home() {
         </section>
 
         <div className={s.actionBar}>
-          <button type="button" className={s.review} onClick={runReview} disabled={!canReview}>
+          <button
+            type="button"
+            className={`${s.review} ${loading ? s.busy : ""}`}
+            onClick={runReview}
+            disabled={!canReview}
+          >
+            {loading && <span className={s.spinner} aria-hidden="true" />}
             {loading ? "Checking against guidelines…" : "Run governance check"}
           </button>
           <span className={s.hint}>Every flag is tied to a rule you supplied. You decide what ships.</span>
@@ -437,7 +443,13 @@ export default function Home() {
                 {dirty && (
                   <div className={s.staleBar}>
                     <span>Content changed since this review. Re-run to verify your fixes.</span>
-                    <button type="button" className={s.rerun} onClick={runReview} disabled={!canReview}>
+                    <button
+                      type="button"
+                      className={`${s.rerun} ${loading ? s.busy : ""}`}
+                      onClick={runReview}
+                      disabled={!canReview}
+                    >
+                      {loading && <span className={s.spinner} aria-hidden="true" />}
                       {loading ? "Re-checking…" : "Re-run check"}
                     </button>
                   </div>
